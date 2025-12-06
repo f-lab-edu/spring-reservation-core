@@ -35,3 +35,68 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Java ###
+*.class
+*.log
+*.ctxt
+
+### JVM crash logs ###
+hs_err_pid*
+replay_pid*
+
+### Gradle ###
+.gradle/
+!gradle/wrapper/gradle-wrapper.properties
+gradle-app.setting
+
+### Spring Boot ###
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+### IntelliJ IDEA ###
+.idea/
+
+
+### OS files ###
+.DS_Store
+Thumbs.db
+
+### Logs ###
+logs/
+*.log.*
+log/
+test-output/
+
+### k6 ###
+*.json
+k6-results/
+loadtest/results/
+
+### Testcontainers ###
+/testcontainers.properties
+
+### Node (if using k6 JS modules locally) ###
+node_modules/
+package-lock.json
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+### Docker ###
+/docker-data/
+/docker-compose.override.yml
+
+### Environment ###
+.env
+.env.*
+!.env.example
+
+### Temporary ###
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
