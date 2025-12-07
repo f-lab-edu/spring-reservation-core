@@ -1,4 +1,4 @@
-package com.example.reservation.reservation_system;
+package com.example.reservation.reservationsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
