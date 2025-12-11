@@ -57,13 +57,13 @@ public class Slot extends BaseEntity {
     private SlotStatus status;
 
     @Builder
-    public Slot(String title, LocalDateTime startAt, LocalDateTime endAt, Integer capacity) {
+    public Slot(String title, LocalDateTime startAt, LocalDateTime endAt, Integer capacity, Integer remaining, SlotStatus status) {
         this.title = title;
         this.startAt = startAt;
         this.endAt = endAt;
         this.capacity = capacity;
-        this.remaining = capacity;
-        this.status = SlotStatus.OPEN;
+        this.remaining = remaining != null ? remaining : capacity;
+        this.status = status != null ? status : SlotStatus.OPEN;
     }
 
     /**
