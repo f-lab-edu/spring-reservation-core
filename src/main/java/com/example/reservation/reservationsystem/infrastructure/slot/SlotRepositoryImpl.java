@@ -4,6 +4,8 @@ import com.example.reservation.reservationsystem.domain.slot.Slot;
 import com.example.reservation.reservationsystem.domain.slot.SlotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -21,5 +23,10 @@ public class SlotRepositoryImpl implements SlotRepository {
     @Override
     public Optional<Slot> findById(Long id) {
         return slotJpaRepository.findById(id);
+    }
+
+    @Override
+    public Page<Slot> findAll(Pageable pageable) {
+        return slotJpaRepository.findAll(pageable);
     }
 }
