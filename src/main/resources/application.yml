@@ -1,3 +1,4 @@
+
 spring:
   application:
     name: reservation-system
@@ -10,6 +11,8 @@ spring:
         format_sql: true
 server:
   port: 8080
+  servlet:
+    context-path: /api
 
 ---
 # Local Environment (H2 In-memory)

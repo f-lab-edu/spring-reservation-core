@@ -5,10 +5,12 @@ import com.example.reservation.reservationsystem.global.error.exception.ErrorCod
 import com.example.reservation.reservationsystem.global.error.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static com.example.reservation.reservationsystem.global.error.exception.GlobalErrorCode.INTERNAL_SERVER_EXCEPTION;
+import static com.example.reservation.reservationsystem.global.error.exception.GlobalErrorCode.INVALID_INPUT_VALUE;
 
 @Slf4j
 @RestControllerAdvice
@@ -32,7 +34,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     *  도메인 오류 이외의 서버 오류
+     * 도메인 오류 이외의 서버 오류
      */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
@@ -42,5 +44,16 @@ public class GlobalExceptionHandler {
                 .message(INTERNAL_SERVER_EXCEPTION.getMessage())
                 .build();
         return ResponseEntity.status(INTERNAL_SERVER_EXCEPTION.getStatus()).body(response);
+    }
+
+    /**
+     * controller valid exception
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error("handle method argument NotValidException :: ", e);
+        ErrorResponse response = ErrorResponse.of(INVALID_INPUT_VALUE.getCode(), INVALID_INPUT_VALUE.getMessage(),
+                e.getBindingResult());
+        return ResponseEntity.status(INVALID_INPUT_VALUE.getStatus()).body(response);
     }
 }
