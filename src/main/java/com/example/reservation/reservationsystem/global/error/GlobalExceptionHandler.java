@@ -9,8 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static com.example.reservation.reservationsystem.global.error.exception.GlobalErrorCode.INTERNAL_SERVER_EXCEPTION;
-import static com.example.reservation.reservationsystem.global.error.exception.GlobalErrorCode.INVALID_INPUT_VALUE;
+import static com.example.reservation.reservationsystem.global.error.exception.GlobalErrorCode.*;
 
 @Slf4j
 @RestControllerAdvice
@@ -34,16 +33,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 도메인 오류 이외의 서버 오류
+     * 도메인 오류 이외의 서버 오류 unchecked exception
      */
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.error("handle unknown exception :: ", e);
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e) {
+        log.error("handle runtime exception :: ", e);
         ErrorResponse response = ErrorResponse.builder()
-                .code(INTERNAL_SERVER_EXCEPTION.getCode())
-                .message(INTERNAL_SERVER_EXCEPTION.getMessage())
+                .code(UNEXPECTED_RUNTIME_EXCEPTION.getCode())
+                .message(UNEXPECTED_RUNTIME_EXCEPTION.getMessage())
                 .build();
-        return ResponseEntity.status(INTERNAL_SERVER_EXCEPTION.getStatus()).body(response);
+
+        return ResponseEntity.status(UNEXPECTED_RUNTIME_EXCEPTION.getStatus()).body(response);
     }
 
     /**
@@ -55,5 +55,20 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(INVALID_INPUT_VALUE.getCode(), INVALID_INPUT_VALUE.getMessage(),
                 e.getBindingResult());
         return ResponseEntity.status(INVALID_INPUT_VALUE.getStatus()).body(response);
+    }
+
+    /**
+     * checked exception
+     */
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+        log.error("handle unknown exception :: ", e);
+
+        ErrorResponse response = ErrorResponse.builder()
+                .code(CHECKED_EXCEPTION.getCode())
+                .message(CHECKED_EXCEPTION.getMessage())
+                .build();
+
+        return ResponseEntity.status(CHECKED_EXCEPTION.getStatus()).body(response);
     }
 }

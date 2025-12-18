@@ -1,5 +1,6 @@
 package com.example.reservation.reservationsystem.domain.slot;
 
+import com.example.reservation.reservationsystem.application.slot.dto.SlotCreateRequest;
 import com.example.reservation.reservationsystem.domain.common.BaseEntity;
 import com.example.reservation.reservationsystem.domain.slot.exception.SlotErrorCode;
 import com.example.reservation.reservationsystem.global.error.exception.BusinessException;
@@ -66,27 +67,17 @@ public class Slot extends BaseEntity {
         this.status = status != null ? status : SlotStatus.OPEN;
     }
 
-    /**
-     * remaining 감소 (예약 발생 시)
-     * - 예약 가능한 상태(reservable)가 아니면 예외 발생
-     */
-    public void decreaseRemaining() {
-        if (!isReservable()) {
-            throw new BusinessException(SlotErrorCode.SLOT_NOT_RESERVABLE);
-        }
-        this.remaining--;
+    public static Slot of(SlotCreateRequest request) {
+        return Slot.builder()
+                .title(request.title())
+                .startAt(request.startAt())
+                .endAt(request.endAt())
+                .capacity(request.capacity())
+                .remaining(request.capacity())
+                .status(SlotStatus.OPEN)
+                .build();
     }
 
-    /**
-     * remaining 증가 (예약 취소 시)
-     * - 처음 설정한 capacity를 초과하면 예외 발생
-     */
-    public void increaseRemaining() {
-        if (this.remaining >= this.capacity) {
-            throw new BusinessException(SlotErrorCode.SLOT_ALREADY_FULL);
-        }
-        this.remaining++;
-    }
 
     /**
      * 예약 가능 여부 검증 : 외부 호출 (isReservable은 private)

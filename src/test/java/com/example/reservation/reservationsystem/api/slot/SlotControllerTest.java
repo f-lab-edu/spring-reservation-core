@@ -2,6 +2,7 @@ package com.example.reservation.reservationsystem.api.slot;
 
 import com.example.reservation.reservationsystem.application.slot.SlotService;
 import com.example.reservation.reservationsystem.application.slot.dto.SlotCreateRequest;
+import com.example.reservation.reservationsystem.application.slot.dto.SlotCreateResponse;
 import com.example.reservation.reservationsystem.application.slot.dto.SlotResponse;
 import com.example.reservation.reservationsystem.domain.slot.SlotStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,37 +53,25 @@ class SlotControllerTest {
                                 LocalDateTime.now().plusDays(1).plusHours(1),
                                 10);
 
-                SlotResponse response = new SlotResponse(
-                                1L,
-                                TEST_NAME,
-                                request.startAt(),
-                                request.endAt(),
-                                10,
-                                10,
-                                SlotStatus.OPEN);
-
-                given(slotService.createSlot(any(SlotCreateRequest.class))).willReturn(1L);
-                given(slotService.getSlot(1L)).willReturn(response);
+                given(slotService.createSlot(any(SlotCreateRequest.class)))
+                                .willReturn(new SlotCreateResponse(1L));
 
                 // when & then
                 mockMvc.perform(post("/slots")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
-                                .andDo(print())
-                                .andExpect(status().isCreated())
-                                .andExpect(jsonPath("$").value(1L));
+                                .andExpect(jsonPath("$.slotId").value(1L));
         }
 
         @Test
-        @DisplayName("Slot 생성 실패")
-        void createSlot_ValidationError() throws Exception {
+        @DisplayName("Slot 생성 실패 시 G002 에러를 반환한다.")
+        void createSlotValidationError() throws Exception {
                 // given
                 SlotCreateRequest request = new SlotCreateRequest(
                                 "",
                                 LocalDateTime.now().minusDays(1),
                                 LocalDateTime.now().minusDays(1),
-                                0
-                );
+                                0);
 
                 // when & then
                 mockMvc.perform(post("/slots")
@@ -99,7 +88,7 @@ class SlotControllerTest {
         }
 
         @Test
-        @DisplayName("Slot 단건 조회")
+        @DisplayName("Slot 단건 조회 시 TEST_NAME을 반환한다.")
         void getSlot() throws Exception {
                 // given
                 SlotResponse response = new SlotResponse(

@@ -7,7 +7,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
@@ -62,7 +61,7 @@ public class ErrorResponse {
                             error.getField(),
                             error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
                             error.getDefaultMessage()))
-                    .collect(Collectors.toList());
+                    .toList();
         }
     }
 }
